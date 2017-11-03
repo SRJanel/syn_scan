@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 01:24:45 2017 
-** Last update Fri Nov  3 02:00:56 2017 
+** Last update Fri Nov  3 02:05:15 2017 
 */
 
 #include <unistd.h>
@@ -50,6 +50,47 @@ static char		bind_raw_sock(const int sd,
   return (0);
 }
 
+char			loop(const int sd,
+			     const struct s_options options)
+{
+  struct sockaddr_in	destination_address;
+  fd_set		read_fds, write_fds;
+  uint32_t		source_ip_addr;
+  size_t		port;
+
+  destination_address.sin_family = AF_INET;
+  if ((destination_address.sin_addr.s_addr = inet_addr(options.target)) == INADDR_NONE
+      || !(source_ip_addr = get_iface_ip_addr(sd, options.interface)))
+    return (PRINT_ERROR("ERROR could not set ipaddr"), 0);
+  port = 0;
+  FD_ZERO(&write_fds);
+  FD_ZERO(&read_fds);
+  FD_SET(sd, &read_fds);
+
+  /*
+  ** MAX_NBR_PORT * 3 is an attempt to wait for
+  ** some lasts packets to receive after the last
+  ** packet was sent. Haven't test it on a connection
+  ** where propagation delay is high.
+  ** If you have a better approach, please do comment.
+  */
+  while (++port <= MAX_NBR_PORT * 3)
+    {
+      FD_SET(sd, &write_fds);
+      FD_SET(sd, &read_fds);
+      if (select(sd + 1, &read_fds, &write_fds, NULL, NULL/* &(struct timeval){0, 900000} */) == -1)
+      	return (PRINT_ERROR("select"), 0);
+      if (FD_ISSET(sd, &read_fds)
+      	  && recv_target(sd, destination_address, source_ip_addr) == -1)
+      	return (PRINT_ERROR("Error recv"), 0);
+      else if (port <= MAX_NBR_PORT && FD_ISSET(sd, &write_fds)
+      	       && send_target(sd, destination_address, source_ip_addr, port) <= 0)
+      	return (PRINT_ERROR("Error send"), 0);
+    }
+  close(sd);
+  return (1);
+}
+
 int			main(int argc, char *argv[])
 {
   struct s_options	options;
@@ -64,5 +105,6 @@ int			main(int argc, char *argv[])
   if (!set_header_ip_inclusion(sd)
       || !bind_raw_sock(sd, options.interface))
     return (EXIT_FAILURE);  
+  loop(sd, options);
   return (EXIT_SUCCESS);  
 }

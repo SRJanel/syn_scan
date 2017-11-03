@@ -5,12 +5,16 @@
 ## Login   <XXX@epitech.eu>
 ##
 ## Started on  Tue Jul 12 12:19:34 2017 Janel
-## Last update Fri Nov  3 02:03:10 2017 
+## Last update Fri Nov  3 02:08:46 2017 
 ##
 
 SRC	= src/main.c \
 	src/options.c \
 	src/utils.c \
+	src/packet.c \
+	src/checksum.c \
+	src/send.c \
+	src/recv.c \
 
 OBJ	= $(SRC:.c=.o)
 
