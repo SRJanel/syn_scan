@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 14:21:17 2017 
-** Last update Fri Nov  3 01:35:22 2017 
+** Last update Mon Dec  4 16:21:28 2017 
 */
 
 #include <stdio.h>
@@ -27,16 +27,12 @@ char			recv_target(const int sd,
     return (PRINT_ERROR("Could not receive: "), 0);
   iphdr = (struct iphdr *)packet;
   tcphdr = (struct tcphdr *)(packet + iphdr->ihl * 4);
-  if (iphdr->protocol == IPPROTO_TCP && iphdr->daddr == source_addr
-      && tcphdr->syn && tcphdr->ack)
+  if (iphdr->protocol == IPPROTO_TCP && iphdr->daddr == source_addr)
     {
-      fprintf(stdout, "[+] PORT %d is open\n", ntohs(tcphdr->source));
+      if (tcphdr->syn && tcphdr->ack)
+	fprintf(stdout, "[+] PORT %d is open\n", ntohs(tcphdr->source));
+      /* else if (tcphdr->rst) */
+      /*   fprintf(stdout, "[+] PORT %d is closed\n", ntohs(tcphdr->source)); */
     }
-
-  /* if (iphdr->protocol == IPPROTO_TCP && iphdr->daddr == source_addr */
-  /*     && tcphdr->rst) */
-  /*   { */
-  /*     fprintf(stdout, "[+] PORT %d is closed\n", ntohs(tcphdr->source)); */
-  /*   } */
   return (1);
 }

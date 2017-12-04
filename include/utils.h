@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 12:26:57 2017 
-** Last update Thu Nov  2 14:25:11 2017 
+** Last update Mon Dec  4 16:23:50 2017 
 */
 
 #ifndef UTILS_H_
@@ -22,8 +22,8 @@
                                                    ((MIN - MAX) + MAX)))
 # define PRINT_ERROR(MESG)		fprintf(stderr, "%s %s @ %s:%s:%d\n", MESG, strerror(errno), \
 						__FILE__, __extension__ __FUNCTION__, __LINE__)
-# define INSIDE                  fprintf(stderr, "INSIDE: %s\n", __FUNCTION__)
+# define INSIDE				fprintf(stderr, "INSIDE: %s\n", __FUNCTION__)
 
-uint32_t            get_iface_ip_addr(const int, const char * const);
+uint32_t				get_iface_ip_addr(const int, const char * const);
 
 #endif /* !UTILS_H_ */

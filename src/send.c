@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 12:29:46 2017 
-** Last update Fri Nov  3 00:53:22 2017 
+** Last update Mon Dec  4 16:32:24 2017 
 */
 
 #include <unistd.h>
@@ -18,17 +18,8 @@
 #include "syn_scan.h"
 #include "utils.h"
 
-size_t	send_packet(int sd, const unsigned char *packet, size_t tot_len,
-		    struct sockaddr_in *dest_addr)
-{
-  return (sendto(sd, packet, tot_len, 0,
-  		 (const struct sockaddr *)dest_addr, sizeof(struct sockaddr_in)));
-}
-
-char			send_target(const int sd,
-				    struct sockaddr_in dest_addr,
-				    const uint32_t source_addr,
-				    const size_t port)
+char			send_target(const int sd, struct sockaddr_in dest_addr,
+				    const uint32_t source_addr, const size_t port)
 {
   unsigned char		packet[IP_MAXPACKET] = {0};
   struct tcphdr		*tcphdr;
@@ -47,7 +38,11 @@ char			send_target(const int sd,
 
   checksum_packets(iphdr, tcphdr);
   dest_addr.sin_port = htons(port);
-  return (send_packet(sd, packet, iphdr->tot_len, &dest_addr));
-  /* return (sendto(sd, packet, iphdr->tot_len, 0, */
-  /* 		 (const struct sockaddr *)&dest_addr, sizeof(struct sockaddr_in))); */
+#ifdef _SECURE_RUN
+  return (1);
+  (void)sd;
+#else
+  return (sendto(sd, packet, iphdr->tot_len, 0,
+  		 (const struct sockaddr *)&dest_addr, sizeof(struct sockaddr_in)));
+#endif /* !_SECURE_RUN */
 }

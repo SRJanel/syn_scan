@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 01:24:45 2017 
-** Last update Fri Nov  3 02:05:15 2017 
+** Last update Mon Dec  4 17:00:01 2017 
 */
 
 #include <unistd.h>
@@ -17,7 +17,8 @@
 #include "options.h"
 #include "utils.h"
 
-__inline__ static void	usage(const char * const prog_name)
+__attribute__((always_inline)) __inline__
+static void	usage(const char * const prog_name)
 {
   fprintf(stderr, "USAGE: %s -t d_addr -i iface\n"			\
           "\t-t, --target\t\tTarget to scan.\n"				\
@@ -25,7 +26,8 @@ __inline__ static void	usage(const char * const prog_name)
           "\t-h, --help\t\tDisplays this message.\n", prog_name);
 }
 
-__inline__ static char	set_header_ip_inclusion(const int sd)
+__attribute__((always_inline)) __inline__
+static char	set_header_ip_inclusion(const int sd)
 {
   return ((setsockopt(sd, IPPROTO_IP, IP_HDRINCL,
                       &(int){1}, sizeof(int)))
@@ -50,6 +52,17 @@ static char		bind_raw_sock(const int sd,
   return (0);
 }
 
+# define FOOLISH_ATTEMPT MAX_NBR_PORT * 3
+/*
+** MAX_NBR_PORT times 3 is an attempt to wait for
+** some lasts packets to receive after the last
+** packet was sent. Have not test it on a connection
+** where propagation delay is high.
+** If you have a better approach, please do comment.
+** Can not rely on ACK-SYN/RST packets as not all the
+** machines are configured to send one when the port
+** is open or closed.
+*/
 char			loop(const int sd,
 			     const struct s_options options)
 {
@@ -67,14 +80,7 @@ char			loop(const int sd,
   FD_ZERO(&read_fds);
   FD_SET(sd, &read_fds);
 
-  /*
-  ** MAX_NBR_PORT * 3 is an attempt to wait for
-  ** some lasts packets to receive after the last
-  ** packet was sent. Haven't test it on a connection
-  ** where propagation delay is high.
-  ** If you have a better approach, please do comment.
-  */
-  while (++port <= MAX_NBR_PORT * 3)
+  while (++port <= FOOLISH_ATTEMPT)
     {
       FD_SET(sd, &write_fds);
       FD_SET(sd, &read_fds);
@@ -90,6 +96,7 @@ char			loop(const int sd,
   close(sd);
   return (1);
 }
+#undef FOOLISH_ATTEMPT
 
 int			main(int argc, char *argv[])
 {
@@ -97,9 +104,14 @@ int			main(int argc, char *argv[])
   int			sd;
   
   options = get_args(argc, argv);
+  fprintf(stderr, "options.help: %d\n", options.help);
+  fprintf(stderr, "options.interface: %s\n", options.interface);
+  fprintf(stderr, "options.target: %s\n", options.target);
+  
   if (!options.interface || !options.target
       || options.help)
     return (usage(argv[0]), EXIT_FAILURE);
+  abort();
   if ((sd = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) == -1)
     return (PRINT_ERROR("Socket Creation"), EXIT_FAILURE);
   if (!set_header_ip_inclusion(sd)

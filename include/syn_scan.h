@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 12:27:44 2017 
-** Last update Thu Nov  2 22:08:34 2017 
+** Last update Mon Dec  4 16:26:55 2017 
 */
 
 #ifndef SYN_SCAN_H_
@@ -15,8 +15,6 @@
 # include <netinet/tcp.h>
 
 # define MAX_NBR_PORT 65535
-
-struct s_options;
 
 typedef struct		s_tcp_pseudoheader
 {
@@ -29,15 +27,14 @@ typedef struct		s_tcp_pseudoheader
 }			t_tcp_pseudoheader;
 
 char			send_target(const int,
-				      struct sockaddr_in,
-				      const uint32_t,
-				      const size_t);
+				    struct sockaddr_in,
+				    const uint32_t,
+				    const size_t);
 char			recv_target(const int,
-				      struct sockaddr_in,
-				      const uint32_t);
-
+				    struct sockaddr_in,
+				    const uint32_t);
 char			build_packet(unsigned char * const,
-				       const struct in_addr);
+				     const struct in_addr);
 void			checksum_packets(struct iphdr *, struct tcphdr *);
 
 #endif /* !SYN_SCAN_H_ */
