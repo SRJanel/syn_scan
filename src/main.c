@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 01:24:45 2017 
-** Last update Mon Dec  4 17:24:43 2017 
+** Last update Mon Dec  4 18:36:17 2017 
 */
 
 #include <unistd.h>
@@ -54,13 +54,13 @@ static char		bind_raw_sock(const int sd,
 
 # define FOOLISH_ATTEMPT MAX_NBR_PORT * 3
 /*
-** MAX_NBR_PORT times 3 is an attempt to wait for
+** FOOLISH_ATTEMPT is an attempt to wait for
 ** some lasts packets to receive after the last
 ** packet was sent. Have not test it on a connection
 ** where propagation delay is high.
 ** If you have a better approach, please do comment.
 ** Can not rely on ACK-SYN/RST packets as not all the
-** machines are configured to send one when the port
+** machines are configured to send those when a port
 ** is open or closed.
 */
 char			loop(const int sd,
