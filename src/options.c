@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Sat Oct 14 21:53:05 2017 
-** Last update Thu Nov  2 01:29:06 2017 
+** Last update Mon Dec  4 17:02:55 2017 
 */
 
 #include <unistd.h>
@@ -31,12 +31,14 @@ struct s_options			get_args(int argc, char **argv)
 			     "t:i:h",
 			     long_options, &index)) == -1)
 	  break ;
-	else if (c == 'i')
+	if (optarg && *optarg == '-') continue ;
+	if (c == 'i')
 	  options.interface = optarg;
 	else if (c == 't')
 	  options.target = optarg;
 	else if (c == 'h' || c == '?')
 	  options.help = 1;
+
       }
     return (options);
 }
