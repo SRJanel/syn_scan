@@ -5,7 +5,7 @@
 ** Login SRJanel <n******.******s@epitech.eu>
 ** 
 ** Started on  Thu Nov  2 01:24:45 2017 
-** Last update Mon Dec  4 17:00:01 2017 
+** Last update Mon Dec  4 17:24:43 2017 
 */
 
 #include <unistd.h>
@@ -104,14 +104,9 @@ int			main(int argc, char *argv[])
   int			sd;
   
   options = get_args(argc, argv);
-  fprintf(stderr, "options.help: %d\n", options.help);
-  fprintf(stderr, "options.interface: %s\n", options.interface);
-  fprintf(stderr, "options.target: %s\n", options.target);
-  
   if (!options.interface || !options.target
       || options.help)
     return (usage(argv[0]), EXIT_FAILURE);
-  abort();
   if ((sd = socket(AF_INET, SOCK_RAW, IPPROTO_TCP)) == -1)
     return (PRINT_ERROR("Socket Creation"), EXIT_FAILURE);
   if (!set_header_ip_inclusion(sd)
