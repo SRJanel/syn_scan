@@ -17,9 +17,9 @@
 # include <stdlib.h>
 # include <errno.h>
 
-# define RANDOM_NBR_RANGE(MIN, MAX)	(rand() % ((MAX > MIN) ?        \
-                                                   ((MAX - MIN) + MIN) : \
-                                                   ((MIN - MAX) + MAX)))
+# define RANDOM_NBR_RANGE(MIN, MAX)	(((MAX > MIN) ?        \
+                                           (rand() % (MAX - MIN) + MIN) : \
+                                           (rand() % (MIN - MAX) + MAX)))
 # define PRINT_ERROR(MESG)		fprintf(stderr, "%s %s @ %s:%s:%d\n", MESG, strerror(errno), \
 						__FILE__, __extension__ __FUNCTION__, __LINE__)
 # define INSIDE				fprintf(stderr, "INSIDE: %s\n", __FUNCTION__)
